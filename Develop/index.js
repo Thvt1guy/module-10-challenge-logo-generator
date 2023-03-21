@@ -1,31 +1,27 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
-const generateSVG = require('./utils/generateSVG');
+const Svg = require('./lib/SVG');
+const { Triangle, Circle, Square } = require('./lib/shapes');
 
 const questions = [{
-    type: 'input',
-    name: 'file',
-    message: 'what will be your file name? [DO NOT INCLUDE ".svg" IN YOUR INPUT]'
-},
-{
     type: 'input',
     name: 'text',
     message: 'What will be your text?'
 },
 {
     type: 'input',
-    name: 'text-color',
+    name: 'textColor',
     message: 'What will be your text color?'
 },
 {
     type: 'list',
-    name: 'shape',
+    name: 'shapeType',
     message: 'Choose a shape.',
-    choices: ['Circle','Triangle','Square'],
+    choices: ['Circle', 'Triangle', 'Square'],
 },
 {
     type: 'input',
-    name: 'shape-color',
+    name: 'shapeColor',
     message: 'What will be your shape\'s color?'
 }
 ]
@@ -42,8 +38,24 @@ function writeToFile(fileName, data) {
 function init() {
     inquirer
         .prompt(questions)
-        .then((answers) => {
-            writeToFile(`${answers.file}.svg`, generateSVG(answers))
+        .then(({ text, textColor, shapeType, shapeColor }) => {
+            let shape;
+
+            switch (shapeType) {
+                case "triangle":
+                    shape = new Triangle()
+                    break;
+                case 'circle':
+                    shape = new Circle()
+                    break
+                default:
+                    shape = new Square()
+            }
+            shape.setColor(shapeColor)
+            const svg = new Svg();
+            svg.setText(text, textColor)
+            svg.setShape(shape)
+            return writeToFile(`generate.svg`, svg.render())
         })
 }
 
