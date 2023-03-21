@@ -1,12 +1,15 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
+const MaxLengthInputPrompt = require('inquirer-maxlength-input-prompt');
+inquirer.registerPrompt('maxlength-input', MaxLengthInputPrompt);
 const Svg = require('./lib/SVG');
 const { Triangle, Circle, Square } = require('./lib/shapes');
 
 const questions = [{
-    type: 'input',
+    type: 'maxlength-input',
     name: 'text',
-    message: 'What will be your text?'
+    message: 'What will be your text?',
+    maxLength: 3
 },
 {
     type: 'input',
@@ -42,10 +45,10 @@ function init() {
             let shape;
 
             switch (shapeType) {
-                case "triangle":
+                case "Triangle":
                     shape = new Triangle()
                     break;
-                case 'circle':
+                case 'Circle':
                     shape = new Circle()
                     break
                 default:
@@ -55,7 +58,7 @@ function init() {
             const svg = new Svg();
             svg.setText(text, textColor)
             svg.setShape(shape)
-            return writeToFile(`generate.svg`, svg.render())
+            return writeToFile(`logo.svg`, svg.render())
         })
 }
 
