@@ -6,6 +6,11 @@ const Svg = require('./lib/SVG');
 const { Triangle, Circle, Square } = require('./lib/shapes');
 
 const questions = [{
+    type: 'input',
+    name: 'title',
+    message: 'What will be your .svg document title?'
+},
+{
     type: 'maxlength-input',
     name: 'text',
     message: 'What will be your text?',
@@ -30,7 +35,7 @@ const questions = [{
 ]
 
 function writeToFile(fileName, data) {
-    fs.writeFile(fileName, data, (error, data) => {
+    fs.writeFile('C:\\Users\\Derrick\\bootcamp\\Classwork\\Day 32 Homework 3-12-23 module-10-challenge\\module-10-challenge-logo-generator\\Develop\\examples\\' + fileName, data, (error, data) => {
         if (error) {
             console.log(error);
         }
@@ -41,7 +46,7 @@ function writeToFile(fileName, data) {
 function init() {
     inquirer
         .prompt(questions)
-        .then(({ text, textColor, shapeType, shapeColor }) => {
+        .then(({ title, text, textColor, shapeType, shapeColor }) => {
             let shape;
 
             switch (shapeType) {
@@ -58,7 +63,7 @@ function init() {
             const svg = new Svg();
             svg.setText(text, textColor)
             svg.setShape(shape)
-            return writeToFile(`logo.svg`, svg.render())
+            return writeToFile(`${title}.svg`, svg.render())
         })
 }
 
